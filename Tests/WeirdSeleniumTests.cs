@@ -62,7 +62,7 @@ namespace Tests
 
             try
             {
-                // Will timeout in 18.5+ seconds
+                // Will timeout in 6.5+ seconds
                 wait.Until(x => x.FindElement(By.CssSelector("#missing")));
             }
             catch
@@ -93,7 +93,7 @@ namespace Tests
 
             stopwatch.Start();
 
-            // Will find 0 elements in 9 seconds
+            // Will find 0 elements in 3 seconds
             wait.Until(x => x.FindElements(By.CssSelector("#missing")));
 
             stopwatch.Stop();
