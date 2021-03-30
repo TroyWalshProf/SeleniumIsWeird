@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.Events;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -17,7 +18,6 @@ using System.Linq;
 
 namespace Tests
 {
-
     /// <summary>
     /// Weird Selenium test class
     /// </summary>
@@ -79,33 +79,7 @@ namespace Tests
         }
 
         /// <summary>
-        /// Open page test
-        /// </summary>
-        [TestMethod]
-        public void WaitingWithElements()
-        {
-            LoginPageModel page = new LoginPageModel(this.TestObject);
-            page.OpenLoginPage();
-            Stopwatch stopwatch = new Stopwatch();
-
-            WebDriverWait wait = new WebDriverWait(new SystemClock(), WebDriver, TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(.5));
-            WebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-
-            stopwatch.Start();
-
-            // Will find 0 elements in 3 seconds
-            wait.Until(x => x.FindElements(By.CssSelector("#missing")));
-
-            stopwatch.Stop();
-
-            double seconds = stopwatch.Elapsed.TotalSeconds;
-
-            Assert.IsTrue(seconds > 3 && seconds < 4, $"Took {seconds}, but expected about 3 seconds");
-            Console.WriteLine(stopwatch.Elapsed);
-        }
-
-        /// <summary>
-        /// Open page test
+        /// Find parent from child node
         /// </summary>
         [TestMethod]
         public void FindParent()
@@ -124,6 +98,18 @@ namespace Tests
 
         /// <summary>
         /// Enter credentials test
+        /// </summary>
+        [TestMethod]
+        public void DragWithActions()
+        {
+            this.WebDriver.Navigate().GoToUrl("https://magenicautomation.azurewebsites.net/Automation");
+            Actions builder = new Actions(WebDriver);
+            builder.DragAndDropToOffset(WebDriver.FindElement(By.CssSelector("#slider > span")), 50, 0).Build().Perform();
+            Assert.AreEqual("4", this.WebDriver.FindElement(By.CssSelector("#sliderNumber")).GetAttribute("value"));
+        }
+
+        /// <summary>
+        /// Do a bunch of wierd stuff
         /// </summary>
         [TestMethod]
         public void DoAllTheWeirdThings()
@@ -186,11 +172,9 @@ namespace Tests
             Log.LogMessage(MessageType.INFORMATION, WebDriver.PageSource);
         }
 
-
-
-
-
-
+        /// <summary>
+        /// Working with tabs and iFrames
+        /// </summary>
         [TestMethod]
         public void FunWithTabsAndiFrames()
         {
